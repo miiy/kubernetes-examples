@@ -1643,6 +1643,8 @@ spec:
         version: "v0.22.0"
     spec:
       serviceAccountName: tekton-pipelines-controller
+      imagePullSecrets:
+        - name: aliyunregcred
       containers:
         - name: tekton-pipelines-controller
           image: registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_controller
