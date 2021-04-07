@@ -1647,13 +1647,13 @@ spec:
         - name: aliyunregcred
       containers:
         - name: tekton-pipelines-controller
-          image: registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_controller
+          image: registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:controller
           args: [
             # Version, to be replace at release time
             "-version", "v0.22.0",
             # These images are built on-demand by `ko resolve` and are replaced
             # by image references by digest.
-            "-kubeconfig-writer-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_kubeconfigwriter", "-git-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_git-init", "-entrypoint-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_entrypoint", "-nop-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_nop", "-imagedigest-exporter-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_imagedigestexporter", "-pr-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_pullrequest-init",
+            "-kubeconfig-writer-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:kubeconfigwriter", "-git-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:git-init", "-entrypoint-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:entrypoint", "-nop-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:nop", "-imagedigest-exporter-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:imagedigestexporter", "-pr-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:pullrequest-init",
             # This is gcr.io/google.com/cloudsdktool/cloud-sdk:302.0.0-slim
             "-gsutil-image", "registry.cn-hangzhou.aliyuncs.com/ahub/tekton:google.com_cloudsdktool_cloud-sdk",
             # The shell image must be root in order to create directories and copy files to PVCs.
@@ -1875,7 +1875,7 @@ spec:
         - name: webhook
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: registry.cn-hangzhou.aliyuncs.com/ahub/tekton:pipeline_webhook
+          image: registry.cn-hangzhou.aliyuncs.com/ahub/tekton-pipeline:webhook
           # Resource request required for autoscaler to take any action for a metric
           resources:
             requests:
