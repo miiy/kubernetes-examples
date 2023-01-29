@@ -1,23 +1,10 @@
-# fpm
-# docker build -t harbor.k8s/library/php7-fpm \
-#   --build-arg DOCKER_PHP_VERSION=7 \
-#   --build-arg DOCKER_PHP_MODE=fpm \
-#   .
-#
-# cli
-# docker build -t harbor.k8s/library/php7-cli \
-#   --build-arg DOCKER_PHP_VERSION=7 \
-#   --build-arg DOCKER_PHP_MODE=cli \
-#   .
-ARG DOCKER_PHP_VERSION
-
 ARG DOCKER_PHP_MODE
 
-FROM php:${DOCKER_PHP_VERSION}-${DOCKER_PHP_MODE}
+FROM php:7.4-${DOCKER_PHP_MODE}
 
 RUN cat /etc/apt/sources.list \
-    && sed -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list \
-    && sed -i "s/security.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list \
+    && sed -i "s/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g" /etc/apt/sources.list \
+    && sed -i "s/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g" /etc/apt/sources.list \
     && echo "\n" \
     && cat /etc/apt/sources.list
 
@@ -28,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     # common
     vim git zip unzip \
     # postgresql
-    postgresql-server-dev-11 \
+    postgresql-server-dev-13 \
     # soap
     libxml2-dev \
     # ldap
