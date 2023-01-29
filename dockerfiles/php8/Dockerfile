@@ -1,6 +1,6 @@
 ARG DOCKER_PHP_MODE
 
-FROM php:7.4-${DOCKER_PHP_MODE}
+FROM php:8.2-${DOCKER_PHP_MODE}
 
 RUN cat /etc/apt/sources.list \
     && sed -i "s/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g" /etc/apt/sources.list \
@@ -16,8 +16,6 @@ RUN apt-get update && apt-get install -y \
     vim git zip unzip \
     # postgresql
     postgresql-server-dev-13 \
-    # soap
-    libxml2-dev \
     # ldap
     libldap2-dev\
     # zip
@@ -48,7 +46,7 @@ RUN docker-php-ext-enable opcache \
 #    # clean
 #    && rm -rf /var/lib/apt/lists/* \
 #    && rm -rf /tmp/pear
-COPY ./phpext /tmp/phpext
+COPY phpext /tmp/phpext
 
 RUN iext="" \
     && for ext in "redis" "xdebug" "memcached" "mongodb" "amqp" "yaml" "swoole" "yaf" "grpc" "xlswriter" "apcu" "imagick"; do \

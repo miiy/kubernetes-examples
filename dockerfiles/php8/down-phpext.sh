@@ -32,7 +32,7 @@ function extDown()
     # https://pecl.php.net/package/redis
     download redis.tgz https://pecl.php.net/get/redis-5.3.7.tgz
     # https://pecl.php.net/package/xdebug
-    download xdebug.tgz https://pecl.php.net/get/xdebug-3.1.6.tgz
+    download xdebug.tgz https://pecl.php.net/get/xdebug-3.2.0.tgz
     # https://pecl.php.net/package/memcached
     download memcached.tgz https://pecl.php.net/get/memcached-3.2.0.tgz
     # https://pecl.php.net/package/mongodb
@@ -44,7 +44,7 @@ function extDown()
     # https://pecl.php.net/package/APCu
     download apcu.tgz https://pecl.php.net/get/apcu-5.1.22.tgz
     # https://pecl.php.net/package/swoole
-    download swoole.tgz https://pecl.php.net/get/swoole-4.8.12.tgz
+    download swoole.tgz https://pecl.php.net/get/swoole-5.0.1.tgz
     # https://pecl.php.net/package/yaf
     download yaf.tgz https://pecl.php.net/get/yaf-3.3.5.tgz
     # https://pecl.php.net/package/gRPC
