@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-fpm-deployment
+  labels:
+    app: laravel-fpm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: laravel-fpm
+  template:
+    metadata:
+      labels:
+        app: laravel-fpm
+    spec:
+      containers:
+        - name: laravel-fpm
+          image: registry.cn-hangzhou.aliyuncs.com/ahub/example-laravel:v1.0-fpm
+          ports:
+            - containerPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: laravel-fpm-service
+spec:
+  selector:
+    app: laravel-fpm
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000

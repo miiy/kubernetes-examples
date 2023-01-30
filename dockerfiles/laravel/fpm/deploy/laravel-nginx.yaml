@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-nginx-deployment
+  labels:
+    app: laravel-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel-nginx
+  template:
+    metadata:
+      labels:
+        app: laravel-nginx
+    spec:
+      containers:
+        - name: laravel-nginx
+          image: nginx:1.23
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: config
+              mountPath: /etc/nginx/conf.d/app.conf
+              subPath: app.conf
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: laravel-nginx-config
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: app.conf
+                path: app.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: laravel-nginx-service
+spec:
+  selector:
+    app: laravel-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: laravel-nginx-config
+data:
+  nginx.conf: |
+    user  nginx;
+    worker_processes  auto;
+
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
+
+
+    events {
+        worker_connections  1024;
+    }
+
+
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+
+        access_log  /var/log/nginx/access.log  main;
+
+        sendfile        on;
+        #tcp_nopush     on;
+
+        keepalive_timeout  65;
+
+        #gzip  on;
+
+        include /etc/nginx/conf.d/*.conf;
+    }
+  app.conf: |
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name localhost;
+        root /var/www/html/public;
+
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-Content-Type-Options "nosniff";
+
+        index index.php;
+
+        charset utf-8;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+        
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+
+        error_page 404 /index.php;    
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        location ~ \.php$ {
+            fastcgi_pass laravel-fpm-service.default.svc.cluster.local:9000;
+            fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+
+        # deny access to files
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+    }
