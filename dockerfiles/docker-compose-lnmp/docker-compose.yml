@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/conf.d/:/etc/nginx/conf.d/
+      - ${APP_PATH}:/var/www/html
+      - ${LOG_PATH}:/var/log
+    networks:
+      - frontend
+      - backend
+
+  php-fpm:
+    build: 
+      context: ./services/php
+      args:
+        - DOCKER_PHP_VERSION=${PHP_VERSION}
+        - DOCKER_PHP_MODE=fpm
+        - DOCKER_PHP_SRC_DIR=${PHP_SRC_DIR}
+        - DOCKER_CHANGE_ALPINE_REPOSITORIES=${CHANGE_ALPINE_REPOSITORIES}
+    expose:
+      - "9000"
+    volumes:
+      - ./config/php/conf.d/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ${APP_PATH}:/var/www/html
+      - ${LOG_PATH}:/var/log
+    networks:
+      - backend
+
+  php-cli:
+    build: 
+      context: ./services/php
+      args:
+        - DOCKER_PHP_VERSION=${PHP_VERSION}
+        - DOCKER_PHP_MODE=cli
+        - DOCKER_PHP_SRC_DIR=${PHP_SRC_DIR}
+        - DOCKER_CHANGE_ALPINE_REPOSITORIES=${CHANGE_ALPINE_REPOSITORIES}
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./config/php/conf.d/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./config/crontabs/root:/etc/crontabs/root
+      - ./config/supervisor/supervisord.conf:/etc/supervisord.conf
+      - ./config/supervisor/supervisor.d:/etc/supervisor.d
+      - ${APP_PATH}:/var/www/html
+      - ${DATA_PATH}/root:/root
+      - ${LOG_PATH}/:/var/log
+    environment:
+      - LANG=C.UTF-8
+    entrypoint: /usr/local/bin/cli-entrypoint.sh
+    command: ["php", "-a"]
+    tty: true
+    working_dir: /var/www/html
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./config/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ${DATA_PATH}/mysql:/var/lib/mysql
+      - ${LOG_PATH}:/var/log
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ${DATA_PATH}/redis:/data
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"

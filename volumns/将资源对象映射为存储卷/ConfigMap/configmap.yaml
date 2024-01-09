@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-appconfigfiles
+data:
+  key-serverxml: |
+    <?xml version='1.0' encoding='utf-8' ?>
+    ....
+  key-loggingproperties: "handlers
+    ......
+    = xxx\r\n\r\n"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-test-app
+  labels:
+    name: cm-test-app
+spec:
+  containers:
+    - name: cm-test-app
+      image: nginx:1.23
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 8080
+      volumeMounts:
+        - name: serverxml            # 引用 Volume 的名称
+          mountPath: /configfiles    # 挂在到容器内的目录下
+  volumes:
+    - name: serverxml                # 定义 Volume 的名称
+      configMap:
+        name: cm-appconfigfiles      # 使用 ConfigMap "cm-appconfigfiles"
+        items:
+        - key: key-serverxml         # key=key-serverxml
+          path: server.xml           # 挂载为 server.xml 文件
+        - key: key-loggingproperties # key=key-loggingproperties
+          path: logging.properties   # 挂载为 logging.properties文件
+
+# kubectl exec cm-test-app -- sh -c "cat /configfiles/server.xml && cat /configfiles/logging.properties"
+# <?xml version='1.0' encoding='utf-8' ?>
+# ....
+# handlers ...... = xxx
