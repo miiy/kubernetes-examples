@@ -9,4 +9,3 @@ redis-server /usr/local/etc/redis/redis.conf
 
 # redis-cli
 # docker run -it --network backend --rm redis:7 redis-cli -h [IP]
-
