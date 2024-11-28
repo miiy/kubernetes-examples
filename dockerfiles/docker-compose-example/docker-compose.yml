@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+
+  app1:
+    image: debian:bookworm
+    restart: always
+    environment:
+      APP_NAME: ${APP1_NAME}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${DATA_PATH}/db:/app/data/db
+    networks:
+      - backend
+
+  app2:
+    image: debian:bookworm
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      APP_NAME: ${APP2_NAME}
+    networks:
+      - backend
+      - frontend
+
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"

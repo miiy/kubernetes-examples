@@ -1,4 +1,4 @@
-# docker-compose-mongo
+# docker-compose-example
 
 ## Run
 
@@ -7,5 +7,3 @@ cp .env.example .env
 docker-compose up -d
 docker-compose stop
 ```
-
-http://localhost:8081/
