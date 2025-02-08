@@ -3,18 +3,18 @@
 
 ```bash
 docker run --name redis -d --restart=always \
--v /home/user/data/redis/data:/data \
---net backend -d redis:7.2.6 \
-redis-server --save 60 1 --loglevel warning
+  -v /data/redis/data:/data \
+  --net backend -d redis:7.2.6 \
+  redis-server --save 60 1 --loglevel warning
 ```
 
 ```bash
 docker run --name redis -d --restart=always \
--p 127.0.0.1:6379:6379 \
--v /home/user/data/redis/conf:/usr/local/etc/redis \
--v /home/user/data/redis/data:/data \
---net backend -d redis:7.2.6 \
-redis-server /usr/local/etc/redis/redis.conf
+  -p 127.0.0.1:6379:6379 \
+  -v /home/user/data/redis/conf:/usr/local/etc/redis \
+  -v /home/user/data/redis/data:/data \
+  --net backend -d redis:7.2.6 \
+  redis-server /usr/local/etc/redis/redis.conf
 ```
 
 redis-cli
