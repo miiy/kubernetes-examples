@@ -1,3 +1,6 @@
+# code-server
+
+```bash
 #!/bin/sh
 # This will start a code-server container and expose it at http://127.0.0.1:8080.
 # It will also mount your current directory into the container as `/home/coder/project`
@@ -14,3 +17,4 @@ docker run -it --name code-server -d --restart=always \
   -v "/home/www/code-server.test/.bash_aliases:/home/coder/.bash_aliases" \
   --net frontend \
   codercom/code-server:4.20.0
+```

@@ -1,3 +1,6 @@
+# rabbitmq
+
+```bash
 # !/bin/sh
 
 # Build
@@ -13,3 +16,5 @@ docker run --rm --name myabbitmq -d --restart=always \
 # visiting http://localhost:15672/
 # Username: admin
 # Password: 123456
+```
+
