@@ -5,7 +5,8 @@
 
 ```bash
 export MONGODB_VERSION=6.0-ubi8
-docker run --name mongodb -d \
+docker run --name mongodb -d --restart=always \
+  --user 1000:1000 \
   -p 127.0.0.1:27017:27017 \
   -v ./mongodb/data/db:/data/db \
   mongodb/mongodb-community-server:$MONGODB_VERSION

@@ -11,10 +11,11 @@
 # easily access/modify your code-server config in $HOME/.config/code-server/config.json
 # outside the container.
 docker run -it --name code-server -d --restart=always \
-  -v "/home/www/code-server.test/.config:/home/coder/.config" \
-  -v "/home/www/code-server.test/project:/home/coder/project" \
-  -v "/home/www/code-server.test/data:/home/coder/data" \
-  -v "/home/www/code-server.test/.bash_aliases:/home/coder/.bash_aliases" \
+  --user "$(id -u)" \
+  -v "/home/user/data/www/code-server.test/.config:/home/coder/.config" \
+  -v "/home/user/data/www/code-server.test/data:/home/coder/data" \
+  -v "/home/user/data/www/code-server.test/.bash_aliases:/home/coder/.bash_aliases" \
+  -v "/home/user/data/project:/home/coder/project" \
   --net frontend \
-  codercom/code-server:4.20.0
+  codercom/code-server:4.92.2
 ```
